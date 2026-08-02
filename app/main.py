@@ -26,6 +26,13 @@ from contextlib import asynccontextmanager
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     db.init_db()
+    try:
+        with db.get_conn() as conn:
+            count = conn.execute("SELECT COUNT(*) FROM entries").fetchone()[0]
+            if count == 0:
+                import seed_demo_data
+    except Exception:
+        pass
     yield
 
 
