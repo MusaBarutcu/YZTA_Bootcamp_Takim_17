@@ -21,11 +21,10 @@ venv/
 env/
 ENV/
  
-# --- Veritabanı (gerçek kullanıcı verisi push edilmemeli) ---
-*.db
+# --- Veritabanı (hazır demo veritabanı dahil edilir) ---
 *.sqlite
 *.sqlite3
-carbon.db
+!carbon.db
  
 # --- Test / cache ---
 .pytest_cache/
