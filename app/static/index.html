@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbOn - Çok Ajanlı Yapay Zeka Destekli Karbon Ayak İzi Koçu</title>
+    <!-- Tailwind CSS, Fontlar, İkonlar ve Chart.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Firebase SDK (v10 compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f2f9f4',
+                            100: '#e1f2e5',
+                            200: '#c3e5cb',
+                            500: '#15803d',
+                            600: '#166534',
+                            700: '#14532d',
+                            900: '#052e16',
+                        },
+                        accent: {
+                            400: '#fb923c',
+                            500: '#f97316',
+                            600: '#ea580c',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['Comfortaa', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 0%, rgba(21, 128, 61, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-50 text-slate-800 min-h-screen font-sans flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- LANDING PAGE VIEW (GİRİŞ SAYFASI) -->
+    <div id="landing-view" class="flex flex-col min-h-screen">
+        <!-- HEADER / NAVIGATION -->
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showLanding()">
+                    <span class="text-3xl">🌱</span>
+                    <span class="font-display font-bold text-2xl text-brand-600 tracking-tight">CarbOn</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="openAuthModal('login')"
+                        class="px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-brand-600 transition-colors">
+                        Giriş Yap
+                    </button>
+                    <button onclick="openAuthModal('register')"
+                        class="px-5 py-2.5 text-sm font-bold bg-brand-500 hover:bg-brand-600 text-white rounded-xl shadow-lg shadow-brand-500/20 transition-all hover:scale-[1.02]">
+                        Ücretsiz Başla 🚀
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- HERO SECTION -->
+        <section class="hero-gradient pt-16 pb-20 px-6">
+            <div class="max-w-5xl mx-auto text-center space-y-8">
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+                    Doğa Dostu Alışkanlıklar <br class="hidden sm:inline" />
+                    Kazanmanın <span
+                        class="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-emerald-500">En Akıllı
+                        Yolu</span> 🌱
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto font-normal leading-relaxed">
+                    CarbOn; günlük alışkanlıklarınızı kolayca takip eden <strong>Akıllı Takip</strong>, gelişiminizi
+                    analiz eden <strong>Kişisel İçgörü</strong> ve dünyamız için sürdürülebilir adımlar atmanızı
+                    sağlayan <strong>Yapay Zeka Koçu</strong> ile yeşil bir yaşama rehberlik eder.
+                </p>
+                <div class="flex justify-center pt-4">
+                    <button onclick="openAuthModal('register')"
+                        class="px-10 py-4 bg-brand-500 hover:bg-brand-600 text-white text-base font-bold rounded-2xl shadow-xl shadow-brand-500/25 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                        <span>Hemen Ücretsiz Başlayın 🚀</span>
+                    </button>
+                </div>
+
+                <!-- METRICS / STATS BADGES -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-10">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                        <p class="text-3xl font-extrabold text-brand-600">3 AI</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-1">Akıllı Yapay Zeka Asistanı</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                        <p class="text-3xl font-extrabold text-brand-600">⚡ Hızlı</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-1">Saniyeler İçinde Veri Girişi</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                        <p class="text-3xl font-extrabold text-amber-500">8 Görev</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-1">Günlük Yeşil Hedefler</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center">
+                        <p class="text-3xl font-extrabold text-slate-800">🎯 Güvenilir</p>
+                        <p class="text-xs text-slate-500 font-semibold mt-1">Bilimsel Katsayılar</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES & AGENTS SECTION -->
+        <section id="agents" class="py-20 px-6 bg-white border-y border-slate-100">
+            <div class="max-w-6xl mx-auto space-y-16">
+                <div class="text-center space-y-4 max-w-2xl mx-auto">
+                    <span
+                        class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-3 py-1 rounded-full">Sizin
+                        İçin Nasıl Çalışıyoruz?</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">Kişisel Sürdürülebilirlik Asistanlarınız
+                    </h2>
+                    <p class="text-slate-500 text-sm">CarbOn, çevreye olan izinizi küçültmek için birlikte çalışan 3
+                        akıllı yapay zeka asistanıyla güçlendirildi.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Agent 1 -->
+                    <div
+                        class="bg-slate-50 p-8 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all hover:-translate-y-1 space-y-4">
+                        <div
+                            class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                            🔍
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">1. Akıllı Takip Asistanı</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Günlük ulaşım ve elektrik kullanımınızı saniyeler içinde karbon emisyonuna çevirir. Doğaya
+                            olan etkinizi an an, net bir şekilde görmenizi sağlar.
+                        </p>
+                    </div>
+                    <!-- Agent 2 -->
+                    <div
+                        class="bg-slate-50 p-8 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all hover:-translate-y-1 space-y-4">
+                        <div
+                            class="w-14 h-14 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                            📊
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">2. İçgörü Asistanı</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Alışkanlıklarınızı analiz eder, geçen haftalarla kıyaslar ve Karbon ayak izinizi "kaç ağacın
+                            yıllık emilimine denk geldiği" gibi somut örneklerle anlaşılır kılar.
+                        </p>
+                    </div>
+                    <!-- Agent 3 -->
+                    <div
+                        class="bg-slate-50 p-8 rounded-3xl border border-slate-100 hover:border-brand-200 transition-all hover:-translate-y-1 space-y-4">
+                        <div
+                            class="w-14 h-14 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                            🤖
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">3. Yeşil Koç</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Yaşam tarzınıza uygun, uygulanması kolay 8 günlük yeşil görev sunar. Küçük adımlarla büyük
+                            farklar yaratmanız için motivasyonunuzu yüksek tutar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-slate-900 text-slate-400 py-12 px-6 mt-auto">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🌱</span>
+                    <span class="font-display font-bold text-xl text-white">CarbOn</span>
+                    <span class="text-xs text-slate-500">| YZTA Bootcamp 2026 Takım 17</span>
+                </div>
+                <div class="text-xs text-slate-500 text-center md:text-right">
+                    © 2026 CarbOn. Tüm hakları saklıdır. Sürdürülebilir dünya için geliştirildi.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- AUTH MODAL (GİRİŞ YAP & KAYIT OL) -->
+    <div id="auth-modal" onclick="if(event.target === this) closeAuthModal()"
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4 transition-all duration-300">
+        <div
+            class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-100 relative space-y-6 animate-in fade-in zoom-in duration-200">
+            <button type="button" onclick="closeAuthModal()" title="Kapat"
+                class="absolute top-5 right-5 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center font-bold text-sm shadow-sm z-10 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <!-- GOOGLE SIGN-IN BUTTON -->
+            <button type="button" onclick="handleGoogleAuth()"
+                class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-3 px-4 rounded-2xl text-sm transition-all shadow-sm flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                </svg>
+                <span>Google ile Giriş Yap</span>
+            </button>
+
+            <div class="relative flex py-1 items-center">
+                <div class="flex-grow border-t border-slate-100"></div>
+                <span class="flex-shrink mx-3 text-slate-400 text-[11px] font-bold uppercase tracking-wider">veya
+                    E-Posta İle</span>
+                <div class="flex-grow border-t border-slate-100"></div>
+            </div>
+
+            <!-- TAB SWITCHER -->
+            <div class="flex bg-slate-100 p-1 rounded-2xl">
+                <button id="auth-tab-login" onclick="switchAuthTab('login')"
+                    class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all bg-white text-slate-800 shadow-sm">
+                    Giriş Yap
+                </button>
+                <button id="auth-tab-register" onclick="switchAuthTab('register')"
+                    class="flex-1 py-2.5 text-sm font-bold rounded-xl transition-all text-slate-500 hover:text-slate-800">
+                    Kayıt Ol
+                </button>
+            </div>
+
+            <!-- GİRİŞ FORM -->
+            <form id="form-login" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5" for="login-id">E-Posta
+                        Adresi</label>
+                    <input type="email" id="login-id" required placeholder=""
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5" for="login-pwd">Şifre</label>
+                    <input type="password" id="login-pwd" required placeholder="••••••••"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500 transition-colors">
+                </div>
+                <div id="login-error"
+                    class="hidden text-xs text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200/60 font-semibold">
+                </div>
+                <button type="submit"
+                    class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-brand-500/20">
+                    Giriş Yap 🚀
+                </button>
+            </form>
+
+            <!-- KAYIT FORM -->
+            <form id="form-register" onsubmit="handleRegisterSubmit(event)" class="hidden space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5" for="reg-fullname">Ad
+                        Soyad</label>
+                    <input type="text" id="reg-fullname" placeholder=""
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5" for="reg-email">E-Posta
+                        Adresi</label>
+                    <input type="email" id="reg-email" required placeholder=""
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5" for="reg-pwd">Şifre (Min 6
+                        Karakter)</label>
+                    <input type="password" id="reg-pwd" minlength="6" required placeholder="••••••••"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500 transition-colors">
+                </div>
+                <div id="register-error"
+                    class="hidden text-xs text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200/60 font-semibold">
+                </div>
+                <button type="submit"
+                    class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-brand-500/20">
+                    Hesabımı Oluştur ✨
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- APP DASHBOARD VIEW (GİRİŞ YAPILDIĞINDA GÖRÜNEN ANA UYGULAMA) -->
+    <div id="app-view" class="hidden flex-col min-h-screen">
+        <!-- ÜST MENÜ / HEADER -->
+        <header class="bg-white border-b border-slate-100 sticky top-0 z-40">
+            <div class="w-full px-6 md:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showDashboardView()">
+                    <span class="text-2xl">🌱</span>
+                    <span class="font-display font-bold text-xl text-brand-600 tracking-wide">CarbOn</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="streak-badge"
+                        class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1.5 rounded-full border border-amber-200/50">0
+                        Günlük Seri 🔥</span>
+                    <span id="points-badge"
+                        class="bg-brand-50 text-brand-600 text-xs font-bold px-3 py-1.5 rounded-full border border-brand-100">100
+                        Yeşil Puan 🌟</span>
+
+                    <!-- USER PROFILE DROPDOWN / LOGOUT -->
+                    <div class="relative">
+                        <button onclick="toggleUserDropdown()"
+                            class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200/70 px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-700 transition-all">
+                            <i class="fa-solid fa-user-circle text-base text-brand-600"></i>
+                            <span id="user-display-name">Kullanıcı</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                        </button>
+                        <div id="user-dropdown"
+                            class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-xl py-2 z-50 space-y-1">
+                            <div class="px-4 py-2 border-b border-slate-50">
+                                <p id="dropdown-fullname" class="text-xs font-bold text-slate-800">Kullanıcı Adı</p>
+                                <p id="dropdown-email" class="text-[10px] text-slate-400 truncate">user@carbon.app</p>
+                            </div>
+                            <button onclick="handleLogout()"
+                                class="w-full text-left px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                <span>Çıkış Yap</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ANA İÇERİK ALANI -->
+        <main class="flex-1 w-full px-6 md:px-8 py-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+            <!-- YAN NAVİGASYON (LEFT SIDEBAR) -->
+            <aside class="md:col-span-3 lg:col-span-2 flex flex-col gap-2">
+                <button id="nav-dashboard" onclick="switchTab('dashboard')"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all bg-brand-50 text-brand-600">
+                    <i class="fa-solid fa-chart-pie text-base"></i>
+                    <span>Kontrol Paneli</span>
+                </button>
+                <button id="nav-data-entry" onclick="switchTab('data-entry')"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-plus text-base"></i>
+                    <span>Veri Girişi</span>
+                </button>
+                <button id="nav-coach" onclick="switchTab('coach')"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50">
+                    <i class="fa-solid fa-leaf text-base"></i>
+                    <span>Yeşil Koç</span>
+                    <span id="badge-tasks"
+                        class="ml-auto bg-accent-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">0</span>
+                </button>
+            </aside>
+
+            <!-- SEKMELER (TAB CONTENT) -->
+            <section class="md:col-span-9 lg:col-span-10">
+                <!-- 1. SEKME: KONTROL PANELİ -->
+                <div id="tab-dashboard" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <!-- Bugünkü durum -->
+                        <div
+                            class="bg-white p-5 rounded-2xl border border-slate-100 flex flex-col items-center justify-center relative overflow-hidden">
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Bugünkü Tüketim
+                            </h3>
+                            <div class="relative w-40 h-40 flex items-center justify-center">
+                                <svg class="absolute top-0 left-0 w-full h-full transform -rotate-90">
+                                    <circle cx="80" cy="80" r="70" class="stroke-slate-100 fill-none" stroke-width="8">
+                                    </circle>
+                                    <circle id="ringOuter" cx="80" cy="80" r="70"
+                                        class="stroke-brand-500 fill-none transition-all duration-500" stroke-width="8"
+                                        stroke-dasharray="440" stroke-dashoffset="440"></circle>
+                                    <circle cx="80" cy="80" r="55" class="stroke-slate-50 fill-none" stroke-width="5"
+                                        opacity="0.6"></circle>
+                                    <circle id="ringInner" cx="80" cy="80" r="55"
+                                        class="stroke-amber-500 fill-none transition-all duration-500" stroke-width="5"
+                                        stroke-dasharray="346" stroke-dashoffset="346" opacity="0.9"></circle>
+                                </svg>
+                                <div class="text-center z-10">
+                                    <span id="today-co2-val" class="text-3xl font-bold text-slate-800">0.0</span>
+                                    <span class="text-xs text-slate-400 block font-medium">kg CO₂e</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-col items-center">
+                                <p class="text-xs text-slate-500">Günlük Limit: <span id="budget-val"
+                                        class="font-bold text-slate-700">15.0</span> kg</p>
+                                <button onclick="changeBudget()"
+                                    class="text-[10px] text-brand-600 hover:text-brand-700 font-bold mt-1 underline">Limiti
+                                    Değiştir</button>
+                            </div>
+                        </div>
+
+                        <!-- Haftalık Toplam -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Haftalık
+                                    Toplam</h3>
+                                <p class="text-3xl font-bold text-slate-800"><span id="stat-weekly">0.0</span> <span
+                                        class="text-sm font-semibold text-slate-400">kg</span></p>
+                            </div>
+                            <div class="border-t border-slate-100 pt-3 mt-4">
+                                <p class="text-xs text-slate-500">Günlük Ortalama: <span id="stat-daily-avg"
+                                        class="font-bold text-slate-700">0.0</span> kg</p>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                                    <div id="budget-progress-bar"
+                                        class="bg-brand-500 h-full rounded-full transition-all duration-500"
+                                        style="width: 0%;"></div>
+                                </div>
+                                <span id="budget-compare-text"
+                                    class="text-[11px] text-slate-400 mt-1 block text-center">Henüz veri
+                                    girilmedi</span>
+                            </div>
+                        </div>
+
+                        <!-- Ağaç Denkliği -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Karbon
+                                    Denkliği</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">Ürettiğiniz karbonu nötrlemek için
+                                    gereken yıllık ağaç adedi:</p>
+                            </div>
+                            <div
+                                class="flex items-center gap-3 bg-brand-50 p-3 rounded-xl border border-brand-100/50 mt-2">
+                                <span class="text-2xl">🌳</span>
+                                <div>
+                                    <p class="text-lg font-bold text-brand-600"><span id="eq-trees">0.0</span> Ağaç</p>
+                                    <p class="text-[10px] text-slate-400">veya araçla <span id="eq-cars">0</span> km
+                                        daha az yol gitmelisiniz.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI İçgörü Kartı -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 space-y-4">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Yapay Zeka İçgörüsü
+                            </h2>
+                            <p class="text-xs text-slate-400">Son 30 günlük tüketim alışkanlıklarınız ve değişim analiziniz.</p>
+                        </div>
+                        <div id="summary"
+                            class="text-sm text-slate-700 leading-relaxed bg-gradient-to-br from-emerald-50/50 to-teal-50/50 border border-emerald-100/50 p-4 rounded-xl font-medium">
+                            Verileriniz yükleniyor…
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Bu
+                                    Hafta</span>
+                                <span id="mWeek" class="text-lg font-bold text-slate-800">–</span> <span
+                                    class="text-xs text-slate-400">kg</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Günlük
+                                    Ort.</span>
+                                <span id="mAvg" class="text-lg font-bold text-slate-800">–</span> <span
+                                    class="text-xs text-slate-400">kg</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span
+                                    class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Haftalık
+                                    Değişim</span>
+                                <span id="mChange" class="text-lg font-bold text-slate-800">–</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Son 30
+                                    Gün</span>
+                                <span id="mMonth" class="text-lg font-bold text-slate-800">–</span> <span
+                                    class="text-xs text-slate-400">kg</span>
+                            </div>
+                        </div>
+                        <div id="equivChips" class="flex flex-wrap gap-2 pt-2"></div>
+                    </div>
+
+                    <!-- Karbon Analiz Grafikleri (Trend & Kategori Dağılımı) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- 14 Günlük Trend Grafiği -->
+                        <div class="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-100 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">14 Günlük
+                                        Karbon Trendi</h2>
+                                    <p class="text-xs text-slate-500 font-semibold mt-0.5">Zaman içindeki salınım
+                                        değişimi (kg CO₂e)</p>
+                                </div>
+                                <span
+                                    class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100">Canlı
+                                    Analiz 📈</span>
+                            </div>
+                            <div class="relative w-full h-[240px]">
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Kategori Dağılımı Doughnut Grafiği -->
+                        <div
+                            class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-100 space-y-4 flex flex-col justify-between">
+                            <div>
+                                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Kategori Dağılımı
+                                </h2>
+                                <p class="text-xs text-slate-500 font-semibold mt-0.5">Ulaşım vs Enerji Oranı</p>
+                            </div>
+                            <div class="relative w-full h-[180px] flex items-center justify-center">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                            <div
+                                class="text-[11px] text-slate-400 text-center font-medium pt-1 border-t border-slate-50">
+                                Haftalık emisyon dağılımı
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Görevler & Son İşlemler -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 space-y-4">
+                            <div class="flex justify-between items-center border-b border-slate-50 pb-2">
+                                <h3 class="font-bold text-sm text-slate-800">Günlük Yeşil Öneriler</h3>
+                                <span id="tasks-progress-summary"
+                                    class="text-[11px] font-bold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">0/0
+                                    Tamamlandı</span>
+                            </div>
+                            <div id="dashboard-tasks-list" class="space-y-2.5"></div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 space-y-4">
+                            <div class="flex justify-between items-center border-b border-slate-50 pb-2">
+                                <h3 class="font-bold text-sm text-slate-800">Son İşlemler</h3>
+                                <button onclick="switchTab('data-entry')"
+                                    class="text-xs text-brand-600 hover:text-brand-700 font-bold">Tümünü Gör</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr
+                                            class="text-[10px] uppercase font-bold text-slate-400 border-b border-slate-100">
+                                            <th class="pb-2">Tarih</th>
+                                            <th class="pb-2">Tür</th>
+                                            <th class="pb-2 text-right">Miktar</th>
+                                            <th class="pb-2 text-right">CO₂</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-records-body" class="divide-y divide-slate-50"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. SEKME: VERİ GİRİŞİ -->
+                <div id="tab-data-entry" class="hidden space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-100 md:col-span-3 space-y-5">
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-800">Yeni Aktivite Ekle</h2>
+                                <p class="text-xs text-slate-400">Günlük ulaşım veya elektrik kullanımınızı saniyeler içinde ekleyin.
+                                </p>
+                            </div>
+                            <div class="bg-slate-100 p-1 rounded-xl flex gap-1">
+                                <button id="toggle-transport" onclick="toggleFormType('transport')"
+                                    class="flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all bg-white text-slate-800 shadow-sm">
+                                    <i class="fa-solid fa-car"></i> Ulaşım
+                                </button>
+                                <button id="toggle-electric" onclick="toggleFormType('electric')"
+                                    class="flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all text-slate-500 hover:text-slate-800">
+                                    <i class="fa-solid fa-plug"></i> Elektrik
+                                </button>
+                            </div>
+
+                            <form id="carbon-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5"
+                                        for="activity-date">Aktivite Tarihi</label>
+                                    <input type="date" id="activity-date" required
+                                        class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                                </div>
+                                <div id="transport-subfield" class="space-y-4">
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5"
+                                                for="transport-type">Araç Tipi</label>
+                                            <select id="transport-type"
+                                                class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-brand-500"></select>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5"
+                                                for="transport-distance">Mesafe (km)</label>
+                                            <input type="number" step="any" id="transport-distance" required
+                                                placeholder="Örn: 25"
+                                                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="electric-subfield" class="hidden space-y-4">
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5"
+                                            for="electric-usage">Kullanım Miktarı (kWh)</label>
+                                        <input type="number" step="any" id="electric-usage" placeholder="Örn: 120"
+                                            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500">
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-lg shadow-brand-500/10 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-plus-circle"></i> Aktiviteyi Kaydet & Hesapla 🚀
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-100 md:col-span-2 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-lg font-bold text-slate-800">Kayıt Defteri</h2>
+                                    <p id="records-total-count" class="text-xs text-slate-400">Toplam 0 kayıt
+                                        bulunmaktadır.</p>
+                                </div>
+                                <div class="flex gap-2 shrink-0">
+                                    <button onclick="exportData('csv')"
+                                        class="text-[10px] text-brand-600 hover:text-brand-700 border border-slate-200 px-2 py-1 rounded-lg font-bold">CSV
+                                        İndir</button>
+                                    <button onclick="exportData('json')"
+                                        class="text-[10px] text-slate-500 hover:text-slate-600 border border-slate-200 px-2 py-1 rounded-lg font-bold">JSON</button>
+                                </div>
+                            </div>
+                            <div class="overflow-y-auto max-h-[350px] pr-1">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr
+                                            class="text-[10px] uppercase font-bold text-slate-400 border-b border-slate-100">
+                                            <th class="pb-2">Tarih</th>
+                                            <th class="pb-2">Detay</th>
+                                            <th class="pb-2 text-right">Miktar</th>
+                                            <th class="pb-2 text-right">CO₂</th>
+                                            <th class="pb-2 text-center"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="logs-table-body" class="divide-y divide-slate-50"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. SEKME: YEŞİL KOÇ -->
+                <div id="tab-coach" class="hidden space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-50 pb-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-slate-800">Yeşil Koç Önerileri</h2>
+                                <p class="text-xs text-slate-400">Günlük yaşantınızda uygulayabileceğiniz çevre dostu
+                                    görevler.</p>
+                            </div>
+                            <div class="flex gap-2 shrink-0">
+                                <button onclick="resetTasks()"
+                                    class="text-xs text-slate-500 hover:text-brand-600 border border-slate-200 px-3 py-1.5 rounded-lg font-semibold">Görevleri
+                                    Sıfırla</button>
+                                <button onclick="refreshCoach()"
+                                    class="text-xs text-slate-500 hover:text-brand-600 border border-slate-200 px-3 py-1.5 rounded-lg font-semibold">Önerileri
+                                    Yenile</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-9 space-y-3">
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Aktif
+                                    Öneriler</h3>
+                                <div id="coach-tasks-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                </div>
+                            </div>
+                            <div class="lg:col-span-3 bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-3">
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Tamamlananlar
+                                </h3>
+                                <div id="coach-completed-list" class="space-y-2"></div>
+                            </div>
+                        </div>
+                        <div id="provider-container" class="text-[10px] text-slate-400 text-right pt-2 font-medium">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- BÜTÇE DÜZENLEME MODALI -->
+    <div id="budget-modal" onclick="if(event.target === this) closeBudgetModal()"
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4 transition-all duration-300">
+        <div
+            class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-100 relative space-y-5 animate-in fade-in zoom-in duration-200">
+            <button type="button" onclick="closeBudgetModal()" title="Kapat"
+                class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center font-bold text-xs shadow-sm cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <div class="space-y-1">
+                <div class="flex items-center gap-2 text-brand-600">
+                    <span class="text-xl">🎯</span>
+                    <h3 class="font-bold text-slate-800 text-base">Günlük Karbon Bütçesi</h3>
+                </div>
+                <p class="text-xs text-slate-400">Hedef günlük CO₂e tüketim limitinizi belirleyin.</p>
+            </div>
+
+            <form onsubmit="handleBudgetSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5"
+                        for="budget-input">Hedef Miktar (kg CO₂e)</label>
+                    <div class="relative">
+                        <input type="number" step="0.1" min="1" max="1000" id="budget-input" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-500 pr-12">
+                        <span class="absolute right-4 top-3 text-xs font-bold text-slate-400">kg</span>
+                    </div>
+                </div>
+
+                <!-- Hızlı Seçenek Çipleri -->
+                <div class="space-y-1.5">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Hızlı
+                        Öneriler</span>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" onclick="$('budget-input').value = 10"
+                            class="px-2.5 py-1 bg-slate-100 hover:bg-brand-50 hover:text-brand-600 text-slate-600 rounded-lg text-xs font-semibold transition-colors">10
+                            kg (Eko)</button>
+                        <button type="button" onclick="$('budget-input').value = 15"
+                            class="px-2.5 py-1 bg-slate-100 hover:bg-brand-50 hover:text-brand-600 text-slate-600 rounded-lg text-xs font-semibold transition-colors">15
+                            kg (Ort.)</button>
+                        <button type="button" onclick="$('budget-input').value = 25"
+                            class="px-2.5 py-1 bg-slate-100 hover:bg-brand-50 hover:text-brand-600 text-slate-600 rounded-lg text-xs font-semibold transition-colors">25
+                            kg (Yüksek)</button>
+                    </div>
+                </div>
+
+                <div id="budget-error" class="hidden text-xs text-rose-600 bg-rose-50 p-2.5 rounded-xl font-semibold">
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeBudgetModal()"
+                        class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition-colors">İptal</button>
+                    <button type="submit"
+                        class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-brand-500/20">Bütçeyi
+                        Güncelle 🚀</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST & DIALOG MODALS -->
+    <div id="toast-notif"
+        class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs px-4 py-3.5 rounded-xl shadow-2xl flex items-center gap-2.5 hidden transition-all duration-300 transform translate-y-5 opacity-0 z-50">
+        <span id="toast-icon" class="text-emerald-400"><i class="fa-solid fa-circle-check"></i></span>
+        <div>
+            <p id="toast-bold-text" class="font-bold"></p>
+            <p id="toast-sub-text" class="text-[10px] text-slate-400">Karbon geçmişiniz başarıyla güncellendi.</p>
+        </div>
+    </div>
+
+    <div id="confirm-modal"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center hidden z-50 transition-all duration-300 opacity-0">
+        <div
+            class="bg-white rounded-2xl p-6 max-w-xs w-full mx-4 shadow-2xl border border-slate-100 space-y-4 transform scale-95 transition-all duration-300">
+            <div class="flex items-center gap-3 text-amber-500">
+                <span class="text-2xl"><i class="fa-solid fa-circle-question"></i></span>
+                <h3 class="font-bold text-slate-800 text-base">Emin misiniz?</h3>
+            </div>
+            <p id="confirm-modal-text" class="text-xs text-slate-500 leading-relaxed"></p>
+            <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                <button id="confirm-cancel"
+                    class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold">İptal</button>
+                <button id="confirm-ok"
+                    class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-bold">Evet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP SCRIPT -->
+    <script>
+        const $ = id => document.getElementById(id);
+        const api = (p, opt = {}) => {
+            const token = localStorage.getItem('carbon_token');
+            if (token) {
+                opt.headers = opt.headers || {};
+                opt.headers['Authorization'] = `Bearer ${token}`;
+            }
+            return fetch(p, opt).then(async r => {
+                if (!r.ok) {
+                    const e = await r.json().catch(() => ({ detail: r.statusText }));
+                    throw new Error(e.detail || 'İşlem gerçekleştirilemedi.');
+                }
+                return r.json();
+            });
+        };
+
+        let currentAuthUser = null;
+        let dailyBudget = 15;
+        let chart = null;
+        let activeProvider = 'rule_based';
+        let factorsData = {};
+
+        const SUBTYPE_LABELS = {
+            'car_petrol': 'Otomobil (benzinli)',
+            'car_diesel': 'Otomobil (dizel)',
+            'car_hybrid': 'Otomobil (hibrit)',
+            'car_ev': 'Otomobil (elektrikli)',
+            'motorcycle': 'Motosiklet',
+            'bus': 'Otobüs',
+            'minibus': 'Minibüs/Dolmuş',
+            'metro': 'Metro/Tramvay',
+            'train': 'Tren',
+            'plane_domestic': 'Uçak (iç hat)',
+            'walk_bike': 'Yürüyüş/Bisiklet',
+            'grid': 'Elektrik (şebeke)'
+        };
+
+        const categoryMap = {
+            transport: { label: 'Ulaşım', icon: '🚲', bg: 'bg-emerald-50 text-brand-600' },
+            energy: { label: 'Enerji', icon: '🔌', bg: 'bg-amber-50 text-amber-700' },
+            recycle: { label: 'Geri Dönüşüm', icon: '♻️', bg: 'bg-blue-50 text-blue-700' },
+            default: { label: 'Yeşil Yaşam', icon: '🌱', bg: 'bg-emerald-50 text-brand-600' }
+        };
+
+        let firebaseAuth = null;
+
+        async function initFirebase() {
+            try {
+                const conf = await api('/api/config/firebase');
+                if (conf.enabled && typeof firebase !== 'undefined') {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(conf);
+                    }
+                    firebaseAuth = firebase.auth();
+                }
+            } catch (e) {
+                console.warn('Firebase başlatılamadı:', e);
+            }
+        }
+
+        async function handleGoogleAuth() {
+            if (!firebaseAuth) {
+                alert('Firebase henüz yapılandırılmadı. Lütfen .env dosyanıza FIREBASE_API_KEY ve proje bilgilerinizi ekleyin.');
+                return;
+            }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await firebaseAuth.signInWithPopup(provider);
+                const fbUser = result.user;
+                const syncRes = await api('/api/auth/firebase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firebase_uid: fbUser.uid,
+                        email: fbUser.email,
+                        full_name: fbUser.displayName || fbUser.email.split('@')[0]
+                    })
+                });
+
+                localStorage.setItem('carbon_token', syncRes.token);
+                currentAuthUser = syncRes;
+                updateUserUI();
+                closeAuthModal();
+                showDashboardView();
+                showToast(`Hoş Geldiniz, ${syncRes.full_name || syncRes.username}! 🌿`, 'Google ile giriş başarılı.');
+            } catch (e) {
+                alert('Google ile giriş yapılamadı: ' + e.message);
+            }
+        }
+
+        // VIEW ROUTING & HASH NAVIGATION
+        function handleHashChange() {
+            const rawHash = window.location.hash.replace('#', '') || (currentAuthUser ? 'dashboard' : 'landing');
+
+            // If user is logged in, #login and #register should NEVER open modal; replace state with #dashboard!
+            if (currentAuthUser && (rawHash === 'login' || rawHash === 'register')) {
+                $('auth-modal').classList.add('hidden');
+                window.history.replaceState(null, '', '#dashboard');
+                handleHashChange();
+                return;
+            }
+
+            // Modal routes for unauthenticated users: #login or #register
+            if (rawHash === 'login' || rawHash === 'register') {
+                switchAuthTab(rawHash);
+                $('auth-modal').classList.remove('hidden');
+                $('landing-view').classList.remove('hidden');
+                $('app-view').classList.add('hidden');
+                return;
+            } else {
+                $('auth-modal').classList.add('hidden');
+                $('login-error').classList.add('hidden');
+                $('register-error').classList.add('hidden');
+            }
+
+            const validTabs = ['dashboard', 'data-entry', 'coach'];
+
+            if (rawHash === 'landing') {
+                $('landing-view').classList.remove('hidden');
+                $('app-view').classList.add('hidden');
+            } else if (validTabs.includes(rawHash)) {
+                if (!currentAuthUser) {
+                    window.history.replaceState(null, '', '#landing');
+                    handleHashChange();
+                    return;
+                }
+                $('landing-view').classList.add('hidden');
+                $('app-view').classList.remove('hidden');
+                $('app-view').classList.add('flex');
+
+                validTabs.forEach(t => {
+                    $(`tab-${t}`).classList.add('hidden');
+                    $(`nav-${t}`).classList.remove('bg-brand-50', 'text-brand-600');
+                    $(`nav-${t}`).classList.add('text-slate-600', 'hover:bg-slate-50');
+                });
+                $(`tab-${rawHash}`).classList.remove('hidden');
+                $(`nav-${rawHash}`).classList.add('bg-brand-50', 'text-brand-600');
+                $(`nav-${rawHash}`).classList.remove('text-slate-600', 'hover:bg-slate-50');
+
+                if (rawHash === 'dashboard') {
+                    loadDashboard();
+                }
+            } else {
+                window.history.replaceState(null, '', currentAuthUser ? '#dashboard' : '#landing');
+                handleHashChange();
+            }
+        }
+
+        window.addEventListener('hashchange', handleHashChange);
+
+        function showLanding() {
+            if (window.location.hash !== '#landing') {
+                window.location.hash = '#landing';
+            } else {
+                handleHashChange();
+            }
+        }
+
+        function showDashboardView(tab = 'dashboard') {
+            if (window.location.hash === `#${tab}`) {
+                handleHashChange();
+            } else {
+                window.location.hash = `#${tab}`;
+            }
+        }
+
+        function scrollToDemo() {
+            $('demo').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // APP TABS & DASHBOARD
+        function switchTab(tabId) {
+            window.location.hash = `#${tabId}`;
+        }
+
+        // AUTH MODAL LOGIC
+        function openAuthModal(tab = 'login') {
+            window.location.hash = `#${tab}`;
+        }
+
+        function closeAuthModal() {
+            if (window.location.hash === '#login' || window.location.hash === '#register') {
+                window.history.replaceState(null, '', currentAuthUser ? '#dashboard' : '#landing');
+                handleHashChange();
+            } else {
+                $('auth-modal').classList.add('hidden');
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!$('auth-modal').classList.contains('hidden')) {
+                    closeAuthModal();
+                }
+                if (!$('budget-modal').classList.contains('hidden')) {
+                    closeBudgetModal();
+                }
+            }
+        });
+
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                $('auth-tab-login').className = "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all bg-white text-slate-800 shadow-sm";
+                $('auth-tab-register').className = "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all text-slate-500 hover:text-slate-800";
+                $('form-login').classList.remove('hidden');
+                $('form-register').classList.add('hidden');
+            } else {
+                $('auth-tab-register').className = "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all bg-white text-slate-800 shadow-sm";
+                $('auth-tab-login').className = "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all text-slate-500 hover:text-slate-800";
+                $('form-register').classList.remove('hidden');
+                $('form-login').classList.add('hidden');
+            }
+        }
+
+        async function handleLoginSubmit(event) {
+            event.preventDefault();
+            const errEl = $('login-error');
+            errEl.classList.add('hidden');
+
+            const id = $('login-id').value.trim();
+            const pwd = $('login-pwd').value;
+
+            try {
+                let data;
+                let targetEmail = id.includes('@') ? id : null;
+
+                if (!targetEmail && firebaseAuth) {
+                    try {
+                        const res = await api(`/api/auth/resolve-email?identifier=${encodeURIComponent(id)}`);
+                        if (res && res.email) {
+                            targetEmail = res.email;
+                        }
+                    } catch (e) { }
+                }
+
+                if (firebaseAuth && targetEmail) {
+                    try {
+                        const userCred = await firebaseAuth.signInWithEmailAndPassword(targetEmail, pwd);
+                        const fbUser = userCred.user;
+                        data = await api('/api/auth/firebase', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                firebase_uid: fbUser.uid,
+                                email: fbUser.email,
+                                full_name: fbUser.displayName || fbUser.email.split('@')[0],
+                                username: !id.includes('@') ? id : null,
+                                password: pwd
+                            })
+                        });
+                    } catch (fbErr) {
+                        data = await api('/api/auth/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username_or_email: id, password: pwd })
+                        });
+                    }
+                } else {
+                    data = await api('/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username_or_email: id, password: pwd })
+                    });
+                }
+
+                localStorage.setItem('carbon_token', data.token);
+                currentAuthUser = data;
+                updateUserUI();
+                closeAuthModal();
+                showDashboardView();
+                showToast(`Hoş Geldiniz, ${data.full_name || data.username}! 🌿`, 'Giriş başarılı.');
+            } catch (e) {
+                errEl.innerText = e.message;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        async function handleRegisterSubmit(event) {
+            event.preventDefault();
+            const errEl = $('register-error');
+            errEl.classList.add('hidden');
+
+            const fullName = $('reg-fullname').value.trim();
+            const email = $('reg-email').value.trim();
+            const pwd = $('reg-pwd').value;
+            const derivedUsername = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '') || 'user';
+
+            try {
+                let data;
+                if (firebaseAuth) {
+                    const userCred = await firebaseAuth.createUserWithEmailAndPassword(email, pwd);
+                    const fbUser = userCred.user;
+                    if (fullName) {
+                        await fbUser.updateProfile({ displayName: fullName }).catch(() => { });
+                    }
+                    data = await api('/api/auth/firebase', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            firebase_uid: fbUser.uid,
+                            email: fbUser.email,
+                            full_name: fullName || derivedUsername,
+                            username: derivedUsername,
+                            password: pwd
+                        })
+                    });
+                } else {
+                    data = await api('/api/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: derivedUsername, email, password: pwd, full_name: fullName })
+                    });
+                }
+
+                localStorage.setItem('carbon_token', data.token);
+                currentAuthUser = data;
+                updateUserUI();
+                closeAuthModal();
+                showDashboardView();
+                showToast(`Tebrikler ${fullName || derivedUsername}! 🎉`, 'Hesabınız başarıyla oluşturuldu.');
+            } catch (e) {
+                errEl.innerText = e.message;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        async function checkSession() {
+            const token = localStorage.getItem('carbon_token');
+            if (token) {
+                try {
+                    const user = await api('/api/auth/me');
+                    currentAuthUser = user;
+                    updateUserUI();
+                    const currentHash = window.location.hash.replace('#', '');
+                    if (['dashboard', 'data-entry', 'coach'].includes(currentHash)) {
+                        handleHashChange();
+                    } else {
+                        showDashboardView('dashboard');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('carbon_token');
+                    currentAuthUser = null;
+                    showLanding();
+                }
+            } else {
+                showLanding();
+            }
+        }
+
+        function updateUserUI() {
+            if (!currentAuthUser) return;
+            $('user-display-name').innerText = currentAuthUser.full_name || currentAuthUser.username;
+            $('dropdown-fullname').innerText = currentAuthUser.full_name || currentAuthUser.username;
+            $('dropdown-email').innerText = currentAuthUser.email || `@${currentAuthUser.username}`;
+            $('points-badge').innerText = `${currentAuthUser.points} Yeşil Puan 🌟`;
+        }
+
+        function toggleUserDropdown() {
+            $('user-dropdown').classList.toggle('hidden');
+        }
+
+        async function handleLogout() {
+            const token = localStorage.getItem('carbon_token');
+            if (token) {
+                await api('/api/auth/logout', { method: 'POST' }).catch(() => { });
+            }
+            localStorage.removeItem('carbon_token');
+            currentAuthUser = null;
+            $('user-dropdown').classList.add('hidden');
+            showLanding();
+            showToast('Oturum Kapatıldı', 'Güvenli şekilde çıkış yapıldı.', '<i class="fa-solid fa-right-from-bracket"></i>', 'text-slate-400');
+        }
+
+        // APP TABS & DASHBOARD
+        function switchTab(tabId) {
+            ['dashboard', 'data-entry', 'coach'].forEach(t => {
+                $(`tab-${t}`).classList.add('hidden');
+                $(`nav-${t}`).classList.remove('bg-brand-50', 'text-brand-600');
+                $(`nav-${t}`).classList.add('text-slate-600', 'hover:bg-slate-50');
+            });
+            $(`tab-${tabId}`).classList.remove('hidden');
+            $(`nav-${tabId}`).classList.add('bg-brand-50', 'text-brand-600');
+            $(`nav-${tabId}`).classList.remove('text-slate-600', 'hover:bg-slate-50');
+        }
+
+        let currentFormType = 'transport';
+        function toggleFormType(type) {
+            currentFormType = type;
+            const transportBtn = $('toggle-transport');
+            const electricBtn = $('toggle-electric');
+            const transportField = $('transport-subfield');
+            const electricField = $('electric-subfield');
+
+            if (type === 'transport') {
+                transportBtn.className = "flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all bg-white text-slate-800 shadow-sm";
+                electricBtn.className = "flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all text-slate-500 hover:text-slate-800";
+                transportField.classList.remove('hidden');
+                electricField.classList.add('hidden');
+                $('transport-distance').required = true;
+                $('electric-usage').required = false;
+            } else {
+                electricBtn.className = "flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all bg-white text-slate-800 shadow-sm";
+                transportBtn.className = "flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all text-slate-500 hover:text-slate-800";
+                electricField.classList.remove('hidden');
+                transportField.classList.add('hidden');
+                $('transport-distance').required = false;
+                $('electric-usage').required = true;
+            }
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            if (!currentAuthUser) return openAuthModal();
+
+            const dateInput = $('activity-date').value;
+            const amount = currentFormType === 'transport'
+                ? parseFloat($('transport-distance').value)
+                : parseFloat($('electric-usage').value);
+            const subtype = currentFormType === 'transport'
+                ? $('transport-type').value
+                : 'grid';
+
+            try {
+                const out = await api('/api/entries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user: currentAuthUser.username,
+                        category: currentFormType === 'transport' ? 'transport' : 'electricity',
+                        subtype,
+                        amount,
+                        entry_date: dateInput || null
+                    })
+                });
+
+                showToast(`${out.entry.co2_kg} kg CO₂e eklendi.`);
+                $('transport-distance').value = '';
+                $('electric-usage').value = '';
+                loadDashboard();
+            } catch (e) {
+                alert('Miktar eklenemedi: ' + e.message);
+            }
+        }
+
+        function changeBudget() {
+            if (!currentAuthUser) return openAuthModal();
+            $('budget-input').value = dailyBudget || 15;
+            $('budget-error').classList.add('hidden');
+            $('budget-modal').classList.remove('hidden');
+        }
+
+        function closeBudgetModal() {
+            $('budget-modal').classList.add('hidden');
+        }
+
+        async function handleBudgetSubmit(event) {
+            event.preventDefault();
+            if (!currentAuthUser) return;
+            const errEl = $('budget-error');
+            errEl.classList.add('hidden');
+
+            const val = parseFloat($('budget-input').value);
+            if (isNaN(val) || val <= 0 || val > 1000) {
+                errEl.innerText = "Lütfen 1 ile 1000 kg arasında geçerli bir miktar girin.";
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                await api('/api/budget', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: currentAuthUser.username, daily_budget_kg: val })
+                });
+                closeBudgetModal();
+                loadDashboard();
+                showToast(`Bütçe Güncellendi 🎯`, `Günlük limitiniz ${val.toFixed(1)} kg olarak ayarlandı.`);
+            } catch (e) {
+                errEl.innerText = e.message;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        async function toggleTask(taskId, done, co2Save, pointsEarned) {
+            if (!currentAuthUser) return;
+            try {
+                await api('/api/tasks/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: currentAuthUser.username, task_id: taskId, done: done ? 1 : 0 })
+                });
+
+                if (done) {
+                    showToast(`Tebrikler! +${pointsEarned} Yeşil Puan!`, `Doğayı ${co2Save.toFixed(1)} kg CO₂ emisyonundan kurtardınız!`, '<i class="fa-solid fa-leaf text-base"></i>', 'text-amber-500');
+                } else {
+                    showToast(`Görev Geri Alındı`, `Öneri yapılmadı olarak işaretlendi.`, '<i class="fa-solid fa-rotate-left text-base"></i>', 'text-slate-400');
+                }
+                loadDashboard();
+            } catch (e) {
+                alert('İşlem gerçekleştirilemedi: ' + e.message);
+            }
+        }
+
+        async function deleteTask(taskId) {
+            if (!currentAuthUser) return;
+            try {
+                await api('/api/tasks/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user: currentAuthUser.username, task_id: taskId })
+                });
+                showToast('Görev Silindi 🗑️', 'Tamamlanan görev listenizden silindi.');
+                loadDashboard();
+            } catch (e) {
+                alert('Görev silinemedi: ' + e.message);
+            }
+        }
+
+        function showConfirm(message, onOk) {
+            const modal = $('confirm-modal');
+            $('confirm-modal-text').innerText = message;
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            const hide = () => {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            };
+            $('confirm-ok').onclick = () => { hide(); if (onOk) onOk(); };
+            $('confirm-cancel').onclick = hide;
+        }
+
+        async function resetTasks() {
+            if (!currentAuthUser) return;
+            showConfirm("Bugünkü görevlerin tamamlanma durumunu sıfırlamak istiyor musunuz?", async () => {
+                try {
+                    await api(`/api/tasks/reset?user=${encodeURIComponent(currentAuthUser.username)}`, { method: 'POST' });
+                    loadDashboard();
+                    showToast("Görevler Sıfırlandı", "Tüm görevler ilk haline getirildi.");
+                } catch (e) {
+                    alert('Görevler sıfırlanamadı: ' + e.message);
+                }
+            });
+        }
+
+        async function refreshCoach() {
+            if (!currentAuthUser) return;
+            try {
+                await api(`/api/coach/refresh?user=${encodeURIComponent(currentAuthUser.username)}`, { method: 'POST' });
+                loadDashboard();
+            } catch (e) {
+                alert('Öneriler yenilenemedi: ' + e.message);
+            }
+        }
+
+        async function deleteRecord(id) {
+            if (!currentAuthUser) return;
+            showConfirm("Bu emisyon kaydını silmek istediğinize emin misiniz?", async () => {
+                try {
+                    await api(`/api/entries/${id}?user=${encodeURIComponent(currentAuthUser.username)}`, { method: 'DELETE' });
+                    loadDashboard();
+                } catch (e) {
+                    alert('Kayıt silinemedi: ' + e.message);
+                }
+            });
+        }
+
+        function exportData(fmt) {
+            if (!currentAuthUser) return;
+            window.open(`/api/export?user=${encodeURIComponent(currentAuthUser.username)}&fmt=${fmt}`);
+        }
+
+        function showToast(boldText, normalText = '', icon = '<i class="fa-solid fa-circle-check"></i>', iconColor = 'text-emerald-400') {
+            const toast = $('toast-notif');
+            $('toast-bold-text').innerText = boldText;
+            $('toast-sub-text').innerText = normalText;
+            $('toast-icon').innerHTML = icon;
+            $('toast-icon').className = iconColor;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.remove('translate-y-5', 'opacity-0'), 10);
+            if (window.toastTimer) clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-5');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 4000);
+        }
+
+        function parseTask(t) {
+            const text = t.text;
+            let category = 'default';
+            const txtLower = text.toLowerCase();
+            if (/(araba|yolculuk|ulaşım|uçak|tren|bisiklet|otobüs|metro|minibüs|km)/.test(txtLower)) category = 'transport';
+            else if (/(cihaz|priz|elektrik|ampul|led|kombi|klima|bekleme|standby|kwh|enerji)/.test(txtLower)) category = 'energy';
+            else if (/(atık|geri dönüşüm|plastik|kağıt|metal|ayrıştır)/.test(txtLower)) category = 'recycle';
+
+            const match = text.match(/([0-9.,]+)\s*kg/);
+            let co2Save = match ? parseFloat(match[1].replace(',', '.')) : 2.5;
+            let points = Math.max(10, Math.round(co2Save * 4)) || 15;
+            return { id: t.id, text, done: t.done, category, co2Save, points };
+        }
+
+        function renderRing(todayKg, budget, weekAvg) {
+            const outer = Math.min(todayKg / budget, 1);
+            const inner = Math.min(weekAvg / budget, 1);
+            $('ringOuter').style.strokeDashoffset = 440 * (1 - outer);
+            $('ringOuter').setAttribute('stroke', todayKg > budget ? '#ef4444' : '#15803d');
+            $('ringInner').style.strokeDashoffset = 346 * (1 - inner);
+        }
+
+        let categoryChartInstance = null;
+
+        function renderChart(trend, byCategory = {}) {
+            const ctxTrend = $('trendChart');
+            const ctxCategory = $('categoryChart');
+            if (!ctxTrend) return;
+
+            const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+            const labels = trend.map(t => {
+                const parts = t.date.split('-');
+                if (parts.length === 3) {
+                    const mIdx = parseInt(parts[1], 10) - 1;
+                    return `${parseInt(parts[2], 10)} ${months[mIdx] || parts[1]}`;
+                }
+                return t.date.slice(5);
+            });
+
+            const transportData = trend.map(t => t.transport);
+            const electricData = trend.map(t => t.electricity);
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            const canvasCtx = ctxTrend.getContext('2d');
+            const gradientEmerald = canvasCtx.createLinearGradient(0, 0, 0, 220);
+            gradientEmerald.addColorStop(0, 'rgba(21, 128, 61, 0.35)');
+            gradientEmerald.addColorStop(1, 'rgba(21, 128, 61, 0.0)');
+
+            const gradientAmber = canvasCtx.createLinearGradient(0, 0, 0, 220);
+            gradientAmber.addColorStop(0, 'rgba(249, 115, 22, 0.35)');
+            gradientAmber.addColorStop(1, 'rgba(249, 115, 22, 0.0)');
+
+            chart = new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Ulaşım',
+                            data: transportData,
+                            borderColor: '#15803d',
+                            backgroundColor: gradientEmerald,
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#15803d',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 7
+                        },
+                        {
+                            label: 'Elektrik',
+                            data: electricData,
+                            borderColor: '#f97316',
+                            backgroundColor: gradientAmber,
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#f97316',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 7
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                boxWidth: 10,
+                                usePointStyle: true,
+                                font: { family: '"Plus Jakarta Sans"', size: 11, weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { family: '"Plus Jakarta Sans"', size: 12, weight: 'bold' },
+                            bodyFont: { family: '"Plus Jakarta Sans"', size: 11 },
+                            padding: 10,
+                            cornerRadius: 10,
+                            displayColors: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: '"Plus Jakarta Sans"', size: 10 }, color: '#94a3b8' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: '"Plus Jakarta Sans"', size: 10 }, color: '#94a3b8' },
+                            title: { display: true, text: 'kg CO₂e', color: '#94a3b8', font: { size: 10, weight: '600' } }
+                        }
+                    }
+                }
+            });
+
+            if (ctxCategory) {
+                if (categoryChartInstance) {
+                    categoryChartInstance.destroy();
+                }
+                const transTot = byCategory.transport || 0;
+                const elecTot = byCategory.electricity || 0;
+                const hasData = transTot > 0 || elecTot > 0;
+
+                categoryChartInstance = new Chart(ctxCategory, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Ulaşım', 'Elektrik'],
+                        datasets: [{
+                            data: hasData ? [transTot, elecTot] : [1, 1],
+                            backgroundColor: hasData ? ['#15803d', '#f97316'] : ['#cbd5e1', '#e2e8f0'],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '72%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { boxWidth: 10, usePointStyle: true, font: { family: '"Plus Jakarta Sans"', size: 11, weight: '600' } }
+                            },
+                            tooltip: {
+                                enabled: hasData
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function renderTasks(tasks) {
+            const dashboardList = $('dashboard-tasks-list');
+            const coachGrid = $('coach-tasks-grid');
+            const completedList = $('coach-completed-list');
+
+            if (!tasks || !tasks.length) {
+                dashboardList.innerHTML = '<div class="text-xs text-slate-400 py-4 text-center">Henüz bugün için bir göreviniz bulunmuyor.</div>';
+                coachGrid.innerHTML = '<div class="col-span-4 text-center py-8 text-slate-400 font-semibold">Görev bulunmuyor.</div>';
+                completedList.innerHTML = '<div class="text-xs text-slate-400 py-2 text-center">Görev bulunmuyor.</div>';
+                $('tasks-progress-summary').innerText = '0/0 Tamamlandı';
+                $('badge-tasks').innerText = '0';
+                return;
+            }
+
+            const parsed = tasks.map(parseTask);
+            const activeTasks = parsed.filter(t => !t.done);
+            const completedTasks = parsed.filter(t => t.done);
+
+            $('tasks-progress-summary').innerText = `${completedTasks.length}/${parsed.length} Tamamlandı`;
+            $('badge-tasks').innerText = activeTasks.length;
+
+            const dashboardTasks = [...activeTasks, ...completedTasks].slice(0, 3);
+            dashboardList.innerHTML = dashboardTasks.map(task => `
+                <div class="flex justify-between items-center p-3 rounded-xl border text-xs transition-all ${task.done ? 'bg-slate-50/80 border-slate-200/50 opacity-60 line-through' : 'bg-white border-slate-100 shadow-sm'
+                }">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-lg">${categoryMap[task.category].icon}</span>
+                        <div class="pr-2">
+                            <h4 class="font-bold text-slate-700">${categoryMap[task.category].label}</h4>
+                            <p class="text-[10px] text-slate-400">${task.text}</p>
+                        </div>
+                    </div>
+                    ${task.done
+                    ? `<div class="flex items-center gap-2 shrink-0">
+                               <span class="text-emerald-600 font-bold text-base"><i class="fa-solid fa-circle-check"></i></span>
+                               <button onclick="toggleTask(${task.id}, false, ${task.co2Save}, ${task.points})" class="text-[10px] text-slate-400 hover:text-rose-500 font-bold underline">Geri Al</button>
+                           </div>`
+                    : `<button onclick="toggleTask(${task.id}, true, ${task.co2Save}, ${task.points})" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg transition-all shadow-sm shrink-0">Yap ✓</button>`
+                }
+                </div>
+            `).join('');
+
+            if (activeTasks.length === 0) {
+                coachGrid.innerHTML = `
+                    <div class="col-span-4 text-center py-10 bg-emerald-50/40 border border-dashed border-emerald-200 rounded-2xl p-6">
+                        <span class="text-3xl block mb-2">🎉</span>
+                        <h4 class="font-bold text-slate-800 text-sm">Harika İş!</h4>
+                        <p class="text-xs text-slate-500 mt-1">Bugünkü tüm yeşil önerileri başarıyla tamamladınız.</p>
+                    </div>
+                `;
+            } else {
+                coachGrid.innerHTML = activeTasks.map(task => `
+                    <div class="border border-slate-100 p-5 rounded-xl space-y-3 flex flex-col justify-between bg-white hover:shadow-md transition-all">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-start">
+                                <span class="text-2xl">${categoryMap[task.category].icon}</span>
+                                <span class="${categoryMap[task.category].bg} text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">${categoryMap[task.category].label}</span>
+                            </div>
+                            <h3 class="font-bold text-sm text-slate-800">${categoryMap[task.category].label} Önerisi</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">${task.text}</p>
+                        </div>
+                        <div class="space-y-2.5 pt-3 border-t border-slate-50">
+                            <div class="flex justify-between text-[11px] text-slate-400 font-semibold">
+                                <span>Tasarruf: <strong class="text-brand-600">~${task.co2Save.toFixed(1)} kg CO₂</strong></span>
+                                <span>Puan: <strong class="text-amber-500">+${task.points}</strong></span>
+                            </div>
+                            <button onclick="toggleTask(${task.id}, true, ${task.co2Save}, ${task.points})" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-md shadow-emerald-500/20 flex items-center justify-center gap-1.5">Görevi Tamamla ✨</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            if (completedTasks.length === 0) {
+                completedList.innerHTML = `<div class="text-center py-8 border border-dashed border-slate-200 rounded-xl"><p class="text-[11px] text-slate-400">Henüz tamamlanan görev yok.</p></div>`;
+            } else {
+                completedList.innerHTML = completedTasks.map(task => `
+                    <div class="flex flex-col justify-between p-3.5 bg-white border border-slate-100 rounded-xl text-xs space-y-2 shadow-sm">
+                        <div class="flex items-start gap-2.5">
+                            <span class="text-emerald-500 text-sm mt-0.5"><i class="fa-solid fa-circle-check"></i></span>
+                            <div class="space-y-0.5">
+                                <span class="font-bold text-[10px] uppercase text-slate-400 block">${categoryMap[task.category].label}</span>
+                                <p class="text-slate-600 leading-relaxed line-through">${task.text}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-slate-50">
+                            <span class="text-[10px] text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded">+${task.points} Puan</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleTask(${task.id}, false, ${task.co2Save}, ${task.points})" class="text-[10px] text-slate-400 hover:text-brand-600 font-bold underline">Geri Al</button>
+                                <span class="text-slate-200">|</span>
+                                <button onclick="deleteTask(${task.id})" class="text-[10px] text-rose-500 hover:text-rose-700 font-bold flex items-center gap-1"><i class="fa-solid fa-trash-can"></i> Sil</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderEntries(entries) {
+            const dashboardTable = $('dashboard-records-body');
+            const logsTable = $('logs-table-body');
+
+            dashboardTable.innerHTML = '';
+            logsTable.innerHTML = '';
+
+            if (!entries || !entries.length) {
+                dashboardTable.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-xs text-slate-400">Henüz kayıt yok.</td></tr>';
+                logsTable.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-xs text-slate-400">Henüz kayıt yok.</td></tr>';
+                $('records-total-count').innerText = 'Toplam 0 kayıt bulunmaktadır.';
+                return;
+            }
+
+            $('records-total-count').innerText = `Toplam ${entries.length} kayıt bulunmaktadır.`;
+
+            entries.slice(0, 3).forEach(rec => {
+                const tr = document.createElement('tr');
+                tr.className = "text-xs border-b border-slate-50 hover:bg-slate-50/50 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-3 font-medium text-slate-500">${rec.entry_date}</td>
+                    <td class="py-3 font-semibold text-slate-700">${rec.category === 'electricity' ? '⚡ Elektrik' : '🚌 ' + (SUBTYPE_LABELS[rec.subtype] || rec.subtype)}</td>
+                    <td class="py-3 text-right text-slate-500">${rec.amount} ${rec.unit}</td>
+                    <td class="py-3 text-right font-bold text-slate-800">${rec.co2_kg} kg</td>
+                `;
+                dashboardTable.appendChild(tr);
+            });
+
+            entries.forEach(rec => {
+                const tr = document.createElement('tr');
+                tr.className = "text-xs border-b border-slate-100 hover:bg-slate-50/40 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-4 font-medium text-slate-500">${rec.entry_date}</td>
+                    <td class="py-4">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${rec.category === 'electricity' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-brand-600'
+                    }">${rec.category === 'electricity' ? 'Enerji' : 'Ulaşım'}</span>
+                    </td>
+                    <td class="py-4 font-semibold text-slate-700">${rec.category === 'electricity' ? 'Elektrik' : (SUBTYPE_LABELS[rec.subtype] || rec.subtype)}</td>
+                    <td class="py-4 text-right font-medium text-slate-500">${rec.amount} ${rec.unit}</td>
+                    <td class="py-4 text-right font-bold text-slate-800">${rec.co2_kg} kg</td>
+                    <td class="py-4 text-center">
+                        <button onclick="deleteRecord(${rec.id})" class="text-rose-500 hover:text-rose-700 p-1" title="Kayıt Sil">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                logsTable.appendChild(tr);
+            });
+        }
+
+        async function loadDashboard() {
+            if (!currentAuthUser) return;
+            try {
+                const d = await api(`/api/dashboard?user=${encodeURIComponent(currentAuthUser.username)}`);
+                dailyBudget = d.user.daily_budget_kg;
+
+                $('streak-badge').innerText = `${d.insight.streak_days || 0} Günlük Seri 🔥`;
+                $('points-badge').innerText = `${d.user.points} Yeşil Puan 🌟`;
+                $('budget-val').innerText = dailyBudget.toFixed(1);
+                $('stat-weekly').innerText = d.insight.week_total_kg.toFixed(1);
+                $('stat-daily-avg').innerText = d.insight.daily_avg_kg.toFixed(1);
+
+                const eq = d.insight.equivalents || {};
+                $('eq-trees').innerText = eq.trees_year || '0.0';
+                $('eq-cars').innerText = eq.car_km || '0';
+
+                $('today-co2-val').innerText = (d.insight.today_total_kg || 0).toFixed(1);
+                renderRing(d.insight.today_total_kg || 0, dailyBudget, d.insight.daily_avg_kg || 0);
+
+                const todayKg = d.insight.today_total_kg || 0;
+                const percent = Math.min((todayKg / dailyBudget) * 100, 100);
+                const progressBar = $('budget-progress-bar');
+                progressBar.style.width = `${percent}%`;
+
+                if (todayKg > dailyBudget) {
+                    progressBar.className = "bg-red-500 h-full rounded-full transition-all duration-500";
+                    $('budget-compare-text').innerText = `Bugünlük bütçenizi aştınız! (${todayKg.toFixed(1)} / ${dailyBudget.toFixed(1)} kg)`;
+                    $('budget-compare-text').className = "text-[11px] text-red-500 text-center font-semibold mt-1 block";
+                } else if (todayKg === 0) {
+                    progressBar.className = "bg-brand-500 h-full rounded-full transition-all duration-500";
+                    $('budget-compare-text').innerText = `Henüz bugün veri girilmedi (Limit: ${dailyBudget.toFixed(1)} kg)`;
+                    $('budget-compare-text').className = "text-[11px] text-slate-400 text-center mt-1 block";
+                } else {
+                    progressBar.className = "bg-emerald-500 h-full rounded-full transition-all duration-500";
+                    $('budget-compare-text').innerText = `Bütçe içindesiniz! (${todayKg.toFixed(1)} / ${dailyBudget.toFixed(1)} kg)`;
+                    $('budget-compare-text').className = "text-[11px] text-emerald-600 text-center font-semibold mt-1 block";
+                }
+
+                $('summary').innerText = d.insight.summary;
+                $('mWeek').innerText = d.insight.week_total_kg.toFixed(1);
+                $('mAvg').innerText = d.insight.daily_avg_kg.toFixed(1);
+
+                if (d.insight.week_change_pct != null) {
+                    $('mChange').innerText = (d.insight.week_change_pct > 0 ? '+' : '') + d.insight.week_change_pct + '%';
+                    $('mChange').className = `text-lg font-bold ${d.insight.week_change_pct > 0 ? 'text-red-500' : 'text-brand-600'}`;
+                } else {
+                    $('mChange').innerText = '–';
+                }
+
+                $('mMonth').innerText = d.insight.month_total_kg.toFixed(1);
+
+                $('equivChips').innerHTML = d.insight.week_total_kg > 0 ? `
+                    <span class="bg-brand-50 text-brand-700 text-xs px-3 py-1.5 rounded-full border border-brand-100/50 font-semibold">🌳 <b>${eq.trees_year}</b> Ağaç / Yıl</span>
+                    <span class="bg-slate-100 text-slate-600 text-xs px-3 py-1.5 rounded-full border border-slate-200/50 font-semibold">🚗 <b>${eq.car_km}</b> Araç-km</span>
+                    <span class="bg-amber-50 text-amber-700 text-xs px-3 py-1.5 rounded-full border border-amber-200/50 font-semibold">☕ <b>${eq.coffee_cups}</b> Fincan Kahve</span>
+                ` : '';
+
+                renderTasks(d.tasks);
+                renderEntries(d.recent_entries);
+                renderChart(d.insight.trend || [], d.insight.by_category || {});
+
+                const provName = { groq: 'Groq Yapay Zeka', gemini: 'Gemini Yapay Zeka', openai: 'OpenAI Yapay Zeka', rule_based: 'Akıllı Öneri Motoru' }[activeProvider] || activeProvider;
+                $('provider-container').innerText = `💡 Öneri Kaynağı: ${provName}`;
+
+            } catch (e) {
+                console.error('Veriler çekilemedi:', e);
+            }
+        }
+
+        // INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            $('activity-date').value = today;
+
+            // Load emission factors for forms
+            api('/api/factors').then(f => {
+                factorsData = f;
+                const selectEl = $('transport-type');
+                if (selectEl && f.transport) {
+                    selectEl.innerHTML = Object.entries(f.transport)
+                        .map(([k, v]) => `<option value="${k}">${v.label} — ${v.kg_per_km} kg/km</option>`).join('');
+                }
+            });
+
+            api('/api/health').then(h => {
+                activeProvider = h.llm;
+            });
+
+            initFirebase();
+            checkSession();
+        });
+    </script>
+</body>
+
+</html>
