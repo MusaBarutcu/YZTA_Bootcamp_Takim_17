@@ -5,11 +5,23 @@ import random
 from app import db
 from app.emission_factors import TRANSPORT_FACTORS, ELECTRICITY_KG_PER_KWH
 
-users_to_seed = ["meliscan2002", "demo"]
+users_to_seed = [
+    ("meliscan2002", "meliscan2002@gmail.com", "Melis Can"),
+    ("demo", "demo@carbon.app", "Demo Kullanıcı")
+]
 
-# Ensure users exist
-for username in users_to_seed:
-    db.ensure_user(username)
+# Ensure users exist and seed entries
+with db.get_conn() as conn:
+    # Also find any user variants created via Firebase Auth (e.g., meliscan2002_1, meliscan2002@gmail.com)
+    existing_rows = conn.execute(
+        "SELECT username, email FROM users WHERE LOWER(username) LIKE 'meliscan2002%' OR LOWER(email) LIKE 'meliscan2002%'"
+    ).fetchall()
+    extra_users = [row["username"] for row in existing_rows if row["username"] not in ["meliscan2002", "demo"]]
+
+all_seed_usernames = ["meliscan2002", "demo"] + extra_users
+
+for uname, email, full_name in users_to_seed:
+    db.ensure_user(uname, email, full_name)
 
 today = date.today()
 
@@ -61,7 +73,7 @@ sample_days = [
     (0, "electricity", "grid", 7.0, "kWh"),
 ]
 
-for username in users_to_seed:
+for username in all_seed_usernames:
     # Clear existing entries first to avoid duplicates
     with db.get_conn() as conn:
         conn.execute("DELETE FROM entries WHERE username = ?", (username,))

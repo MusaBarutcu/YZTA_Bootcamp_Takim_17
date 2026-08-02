@@ -181,10 +181,14 @@ def sync_firebase_user(firebase_uid: str, email: str, full_name: str = "", displ
         pwd_hash_str = f"{salt}${pwd_hash}"
 
     token = secrets.token_hex(32)
+    base_uname = (email.split("@")[0] if "@" in email else "").strip().lower()
     with get_conn() as conn:
         row = conn.execute(
-            "SELECT * FROM users WHERE firebase_uid = ? OR (email IS NOT NULL AND LOWER(email) = ?)",
-            (firebase_uid, email),
+            """SELECT * FROM users 
+               WHERE firebase_uid = ? 
+                  OR (email IS NOT NULL AND email != '' AND LOWER(email) = ?)
+                  OR (LOWER(username) = ? AND (email IS NULL OR email = ''))""",
+            (firebase_uid, email, base_uname),
         ).fetchone()
 
         if row:
@@ -258,28 +262,33 @@ def logout_user(token: str) -> bool:
         return cur.rowcount > 0
 
 
-def ensure_user(username: str) -> dict:
+def ensure_user(username: str, email: str = None, full_name: str = "") -> dict:
+    email_clean = email.strip().lower() if email and email.strip() else None
     with get_conn() as conn:
         row = conn.execute(
-            "SELECT * FROM users WHERE username = ?", (username,)
+            "SELECT * FROM users WHERE LOWER(username) = ?", (username.lower(),)
         ).fetchone()
         if row is None:
             conn.execute(
-                "INSERT INTO users (username, daily_budget_kg, created_at) VALUES (?, ?, ?)",
-                (username, config.DEFAULT_DAILY_BUDGET_KG, _now()),
+                "INSERT INTO users (username, email, full_name, daily_budget_kg, created_at) VALUES (?, ?, ?, ?, ?)",
+                (username, email_clean, full_name.strip() or username, config.DEFAULT_DAILY_BUDGET_KG, _now()),
             )
             budget = config.DEFAULT_DAILY_BUDGET_KG
-            full_name = username
-            email = ""
+            resolved_full_name = full_name.strip() or username
+            resolved_email = email_clean or ""
         else:
+            if email_clean and not row["email"]:
+                conn.execute("UPDATE users SET email = ? WHERE username = ?", (email_clean, row["username"]))
+            if full_name and not row["full_name"]:
+                conn.execute("UPDATE users SET full_name = ? WHERE username = ?", (full_name.strip(), row["username"]))
             budget = row["daily_budget_kg"]
-            full_name = row["full_name"] or username
-            email = row["email"] or ""
+            resolved_full_name = full_name.strip() or row["full_name"] or username
+            resolved_email = row["email"] or email_clean or ""
 
         return {
             "username": username,
-            "email": email,
-            "full_name": full_name,
+            "email": resolved_email,
+            "full_name": resolved_full_name,
             "daily_budget_kg": budget,
             "points": get_user_points(username),
         }
