@@ -163,6 +163,90 @@ Sprint 2'de uygulamanın üç ana sayfası tamamlandı ve çalışır hale getir
 # Sprint 3
 
 <details>
+<summary><b>Sprint Board Update</b></summary>
+<br>
+
+Sprint boyunca işlerimizi takip ettiğimiz Trello panomuzun ekran görüntüleri:
+
+**Sprint Başlangıcı:** Sprint planlama toplantısının ardından oluşturulan Sprint 3 panosunun ilk görünümü. Bu ekran görüntüsü, sprint başlangıcında belirlenen görevlerin ve iş planının başlangıç durumunu göstermektedir.
+
+<img width="1913" height="1031" alt="image" src="https://github.com/user-attachments/assets/b540cfbc-4508-4d59-810a-bac68fcd7a16" />
+<br>
+</br> 
+
+**Sprint Ortası:** Sprint sürecinin orta aşamasında alınan Trello pano görüntüsü. Bu ekran görüntüsü, sprint boyunca görevlerin ilerleyişinin ve iş akışının düzenli olarak takip edildiği aşamayı göstermektedir.
+
+<img width="1916" height="1032" alt="image" src="https://github.com/user-attachments/assets/7ca08886-a954-475d-8672-338f98801ebe" />
+<br>
+</br> 
+
+**Sprint Sonu:** Sprint tamamlanmadan önce alınan son Trello pano görüntüsü. Bu ekran görüntüsü, Sprint 3 sürecinin son aşamasındaki genel pano görünümünü yansıtmaktadır.
+
+<img width="1919" height="1035" alt="image" src="https://github.com/user-attachments/assets/320b2eb7-5521-4107-b8a4-1750a8850efd" />
+<br>
+</br> 
+
+</details>
+
+<details>
+<summary><b>Ürün Durumu</b></summary>
+<br>
+
+Sprint 3'te Sprint 2'de tamamlanan üç ana sayfanın (Kontrol Paneli, Veri Girişi ve Yeşil Koç) üzerine gerçek kullanıcı hesapları, gelişmiş yapay zeka destekli analizler ve daha güçlü bir koçluk deneyimi eklendi.
+
+* **Giriş / Kayıt Sistemi:**
+  * Uygulamaya herkesin erişebildiği bir tanıtım (Landing) sayfası eklendi. Sayfadaki **"Giriş Yap"** ve **"Ücretsiz Başla"** butonları ortak giriş/kayıt ekranını açmaktadır.
+  * **Google ile Giriş (Firebase Authentication):** Firebase Web Authentication entegre edildi. Kullanıcı Google hesabıyla güvenli şekilde giriş yapabilir ve Firebase üzerinden doğrulanan kimlik bilgileri backend tarafındaki kullanıcı hesabıyla eşleştirilir.
+  * **E-posta / Şifre ile Giriş (Firebase'den bağımsız):** Kullanıcılar ad-soyad, e-posta ve şifre kullanarak doğrudan backend üzerinde hesap oluşturabilir. Şifreler sunucu tarafında salt uygulanarak hash'lenmekte ve güvenli şekilde veritabanında saklanmaktadır. Aynı bilgilerle Firebase kullanılmadan giriş yapılabilmektedir.
+
+* **Kontrol Paneli – Insight Agent:**
+  * Kullanıcının karbon verileri **bugün, haftalık, önceki hafta ve aylık** periyotlarda analiz edilmektedir.
+  * Haftalık değişim yüzdesi hesaplanarak %5 üzerindeki artışlarda uyarı, %5 üzerindeki azalışlarda ise motive edici geri bildirim oluşturulmaktadır.
+  * Günlük karbon ortalaması Türkiye kişi başı günlük karbon emisyon ortalaması ile karşılaştırılmaktadır.
+  * Haftalık karbon emisyonu; ağaç, araç kilometresi ve kahve fincanı gibi günlük hayatta anlaşılabilecek eşdeğerlerle görselleştirilmektedir.
+  * Insight Agent tüm analizleri kullanıcıya doğal ve anlaşılır bir Türkçe özet halinde **"Yapay Zeka İçgörü Kartı"** üzerinde sunmaktadır.
+  * Sprint 2'de bulunmayan **14 Günlük Karbon Trendi** çizgi grafiği eklenerek ulaşım ve elektrik kaynaklı karbon emisyonlarının zaman içerisindeki değişimi gösterilmektedir.
+  * Ulaşım ve elektrik kaynaklı emisyon dağılımını gösteren **Kategori Dağılımı (Doughnut)** grafiği eklendi.
+
+* **Yeşil Koç Geliştirmeleri:**
+  * Günlük öneri sayısı **3'ten 8'e** çıkarıldı.
+  * Aktif öneriler 2x4 kart düzeninde kullanıcıya sunulmaktadır.
+  * Tamamlanan görevler ayrı bir bölümde listelenmekte ve istenildiğinde **"Geri Al"** seçeneğiyle tekrar aktif hale getirilebilmektedir.
+  * **"Önerileri Yenile"** butonu ile yeni görev önerileri oluşturulabilmektedir.
+
+* **LLM ve Dağıtım Altyapısı:**
+  * Coach Agent performansını artırmak amacıyla **Groq LLM** entegrasyonu gerçekleştirildi.
+  * Model sağlayıcı sırası **Groq → Gemini → OpenAI → Kural Tabanlı Yedek Koç** olacak şekilde güncellendi.
+  * Dockerfile ve `run.sh` dosyaları hazırlanarak uygulamanın tek komutla container ortamında çalıştırılabilmesi sağlandı.
+
+**Ekran Görüntüleri:**
+<img width="1892" height="1025" alt="image" src="https://github.com/user-attachments/assets/6b3a63fa-7efb-41bd-906a-744f8e8f18cf" />
+*CarbOn uygulamasının Landing Page ekranı.*
+<br>
+</br>
+<img width="1875" height="1021" alt="image" src="https://github.com/user-attachments/assets/7f0ce970-0eaf-48ce-ae99-dd816c5be91b" />
+*Çift kimlik doğrulama altyapısını destekleyen giriş/kayıt ekranı. Google ile giriş (Firebase Authentication) ve backend tabanlı e-posta/şifre doğrulama yöntemleri tek arayüz üzerinden sunulmaktadır.*
+<br>
+</br>
+<img width="1881" height="1017" alt="image" src="https://github.com/user-attachments/assets/33532209-d296-4dd0-84c3-a464d9ff1aa7" />
+*Firebase Authentication kullanılarak Google hesabı ile güvenli giriş yapılabilmektedir.*
+<br>
+</br>
+<img width="1875" height="890" alt="image" src="https://github.com/user-attachments/assets/2388ad0b-595f-4c2f-8b3d-6d0bf610bc20" />
+*Insight Agent destekli yeni Kontrol Paneli. Haftalık karbon analizi, yapay zeka içgörüleri, çevresel eşdeğerler ve kullanıcı istatistikleri tek ekranda sunulmaktadır.*
+<br>
+</br>
+<img width="1908" height="1009" alt="image" src="https://github.com/user-attachments/assets/4ce4b170-b6f6-4910-a140-8b44bebd2d06" />
+*Tracking Agent'ın veri giriş ekranı. Ulaşım ve elektrik tüketim bilgileri kaydedilerek karbon emisyonu hesaplanır; kullanıcı kayıtları tarih bazında tutulur ve CSV/JSON formatlarında dışa aktarılabilir.*
+<br>
+</br>
+<img width="1888" height="1033" alt="image" src="https://github.com/user-attachments/assets/1398b69d-09e5-4e0a-9cfa-f8589742cc0e" />
+*LLM destekli Yeşil Koç ekranı. Kullanıcıya günlük çevre dostu görevler önerilir, tamamlanan görevler puanlandırılır ve gamification sistemi ile sürdürülebilir alışkanlıklar teşvik edilir.*
+<br>
+</br>
+</details>
+
+<details>
 <summary><b>Sprint Review</b></summary>
 <br>
 
