@@ -445,3 +445,65 @@ def get_user_points(username: str) -> int:
         ).fetchone()[0]
     
     return 100 + (task_count * 15) + (entry_count * 10)
+
+
+def seed_user_if_empty(username: str) -> None:
+    from .emission_factors import TRANSPORT_FACTORS, ELECTRICITY_KG_PER_KWH
+    with get_conn() as conn:
+        count = conn.execute(
+            "SELECT COUNT(*) FROM entries WHERE username = ?", (username,)
+        ).fetchone()[0]
+        if count == 0:
+            today = date.today()
+            sample_days = [
+                (20, "transport", "bus", 18.0, "km"),
+                (20, "electricity", "grid", 6.5, "kWh"),
+                (19, "transport", "metro", 22.0, "km"),
+                (19, "electricity", "grid", 8.0, "kWh"),
+                (18, "transport", "car_petrol", 35.0, "km"),
+                (18, "electricity", "grid", 12.0, "kWh"),
+                (17, "transport", "bus", 14.0, "km"),
+                (17, "electricity", "grid", 7.2, "kWh"),
+                (16, "transport", "metro", 20.0, "km"),
+                (16, "electricity", "grid", 9.0, "kWh"),
+                (15, "transport", "tram", 12.0, "km"),
+                (15, "electricity", "grid", 6.0, "kWh"),
+                (14, "transport", "car_diesel", 28.0, "km"),
+                (14, "electricity", "grid", 11.5, "kWh"),
+                (13, "transport", "bus", 15.0, "km"),
+                (13, "electricity", "grid", 8.5, "kWh"),
+                (12, "transport", "metro", 25.0, "km"),
+                (12, "electricity", "grid", 7.8, "kWh"),
+                (11, "transport", "car_hybrid", 40.0, "km"),
+                (11, "electricity", "grid", 10.0, "kWh"),
+                (10, "transport", "bus", 16.0, "km"),
+                (10, "electricity", "grid", 8.0, "kWh"),
+                (9, "transport", "metro", 18.0, "km"),
+                (9, "electricity", "grid", 9.2, "kWh"),
+                (8, "transport", "car_electric", 30.0, "km"),
+                (8, "electricity", "grid", 14.0, "kWh"),
+                (7, "transport", "bus", 20.0, "km"),
+                (7, "electricity", "grid", 7.5, "kWh"),
+                (6, "transport", "metro", 24.0, "km"),
+                (6, "electricity", "grid", 8.8, "kWh"),
+                (5, "transport", "car_petrol", 25.0, "km"),
+                (5, "electricity", "grid", 10.5, "kWh"),
+                (4, "transport", "bus", 18.0, "km"),
+                (4, "electricity", "grid", 6.8, "kWh"),
+                (3, "transport", "metro", 21.0, "km"),
+                (3, "electricity", "grid", 8.2, "kWh"),
+                (2, "transport", "tram", 15.0, "km"),
+                (2, "electricity", "grid", 9.5, "kWh"),
+                (1, "transport", "car_hybrid", 30.0, "km"),
+                (1, "electricity", "grid", 11.0, "kWh"),
+                (0, "transport", "bus", 22.0, "km"),
+                (0, "electricity", "grid", 7.0, "kWh"),
+            ]
+            for days_ago, cat, sub, amt, unit in sample_days:
+                entry_date = (today - timedelta(days=days_ago)).isoformat()
+                if cat == "transport":
+                    factor = TRANSPORT_FACTORS.get(sub, {}).get("kg_per_km", 0.15)
+                    co2 = amt * factor
+                else:
+                    co2 = amt * ELECTRICITY_KG_PER_KWH
+                add_entry(username, entry_date, cat, sub, amt, unit, round(co2, 3))

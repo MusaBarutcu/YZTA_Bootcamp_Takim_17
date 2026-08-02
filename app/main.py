@@ -224,6 +224,7 @@ def refresh_coach(body: BudgetIn | None = None, user: str = Query(...)):
 def dashboard(user: str = Query(...)):
     """Arayüzün tek çağrıda ihtiyaç duyduğu her şey."""
     u = db.ensure_user(user)
+    db.seed_user_if_empty(user)
     analysis = insight.analyze(user)
     today = date.today().isoformat()
     tasks = db.tasks_for_day(user, today)
