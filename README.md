@@ -191,6 +191,14 @@ Süreçteki takım üyelerinin farklı zaman dilimlerinde müsaitlik durumları 
 <img width="1350" height="744" alt="sprint3-message2" src="https://github.com/user-attachments/assets/a46fc742-0e24-483c-9876-895ddc3b8151" />
 <br>
 </br>
+<img width="1316" height="745" alt="sprint3-message3" src="https://github.com/user-attachments/assets/c6d2d261-2de5-4611-8309-e26726a0d5ed" />
+<br>
+</br>
+<img width="1333" height="737" alt="sprint3-message4" src="https://github.com/user-attachments/assets/f421ec7e-ac33-4839-a50d-7be3b1db3ac7" />
+<br>
+</br>
+
+
 
 </details>
 
