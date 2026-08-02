@@ -304,11 +304,12 @@ Sprint 3'te Sprint 2'de tamamlanan üç ana sayfanın (Kontrol Paneli, Veri Giri
 <br>
 
 * **Kazanımlar & Olumlu Yönler:**
-  * Sprint 3'te hedeflediğimiz tüm teknik ve dokümantasyon süreçlerini zamanında tamamlayarak çalışan ürünü canlıya alabildik. Sprint 2'de yaşanan entegrasyon aksaklıklarından ders çıkarıldığı için bu sprintte frontend ve backend iletişimi çok daha akıcı ve hızlı yürütüldü.
+  * Sprint 3'te önceliklendirdiğimiz ana teknik hedefleri ve dokümantasyon süreçlerini tamamlayarak çalışan ürünü canlıya alabildik. Sprint 2'de yaşanan entegrasyon aksaklıklarından ders çıkarıldığı için bu sprintte frontend ve backend iletişimi çok daha akıcı ve hızlı yürütüldü.
   * Insight Agent'ın Türkiye ortalaması kıyaslaması ve LLM özet üretimi gibi detaylarının artırılması, ürünün sunduğu analitik değeri bir üst seviyeye taşıdı.
 * **Geliştirilmesi Gereken Alanlar & Aksiyonlar:**
   * LLM prompt çıktılarının ve trend analizi algoritmalarının veri çeşitliliği arttıkça doğru bir biçimde çalışmaya devam etmesi için canlı ortamdaki kullanıcı verileriyle düzenli testler yapılması gerekiyor.
   * Canlıya alınan uygulamanın kullanıcı geri bildirimleri doğrultusunda performans takibinin yapılması ve olası hata izleme mekanizmalarının kurulması, sonraki süreç için temel aksiyon olarak belirlendi.
+  * Ayrıca, Trello planımızda yer alan Paylaşımlı Yolculuk özelliğini, projemize ve sürdürülebilir yaşama büyük katkı sağlayacağına inandığımız için ilerleyen dönemlerde projeye eklenecek geliştirmelerden biri olarak belirledik.
 </details>
 
 
