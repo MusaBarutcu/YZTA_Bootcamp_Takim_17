@@ -163,6 +163,38 @@ Sprint 2'de uygulamanın üç ana sayfası tamamlandı ve çalışır hale getir
 # Sprint 3
 
 <details>
+<summary><b>Backlog Düzeni ve Story Seçimleri</b></summary>
+<br>
+
+Sprint 3 planlama aşamasında temel hedefimizi Sprint 2 retrospective kararlarımıza bağlı kalarak eksik kalan analitik ajanları sisteme dahil etmek ve ürünü canlıya taşımak olarak belirledik. Bu doğrultuda backlog’da bekleyen görevler, kullanıcının doğrudan deneyimleyeceği öncelikli ihtiyaçlar ve teknik zorunluluklar göz önüne alınarak sprint kurgusuna dahil edildi.
+
+İlk olarak kullanıcı verilerinin güvenliğini ve kişiselleştirilmesini sağlamak adına kullanıcı kimlik doğrulama (Authentication) story'si backlog'un en üstüne yerleştirildi. Ardından uygulamanın en kritik analitik modülü olan ve kullanıcının haftalık CO2 trendlerini görmesini, doğaya en çok zarar verdiği alanı tespit etmesini ve LLM tabanlı özetler almasını hedefleyen Insight Agent story'si planlamaya alındı. Teknik tarafta ise uygulamanın sunucuya aktarılmasını içeren Deployment görevi ile bootcamp teslimi için gerekli olan demo video ve README dokümantasyon task'ları backlog'a eklenerek sprint iş listesi tamamlandı.
+
+</details>
+
+<details>
+<summary><b>Daily Scrum</b></summary>
+<br>
+
+Sprint boyunca takım olarak Daily Scrum takibimizi Whatsapp üzerinden günlük yazılı güncellemelerle, teknik koordinasyon ve planlamaları ise Google Meet üzerinden gerçekleştirdiğimiz toplantılarla yürüttük. 
+
+Süreçteki takım üyelerinin farklı zaman dilimlerinde müsaitlik durumları olabildiği için en etkili iletişimin Whatsapp üzerinden yürütülmesi kararı devam ettirildi. Tüm ekip üyeleri gün içindeki ilerlemelerini ve karşılaştıkları engelleri gruptan düzenli olarak paylaştı. Son sprintte olmamız sebebiyle kararlar hızlıca sonuç odaklı işler ve doğrudan iletişimle alındı.
+
+<br>
+
+<img width="1293" height="737" alt="sprint3-meeting" src="https://github.com/user-attachments/assets/5aa27918-1e2d-4380-9a25-b5fc2fadfc83" />
+<br>
+</br>
+<img width="1354" height="714" alt="sprint3-message1" src="https://github.com/user-attachments/assets/3c6f8bf8-4b7b-4ec8-9465-07b2527e7160" />
+<br>
+</br>
+<img width="1350" height="744" alt="sprint3-message2" src="https://github.com/user-attachments/assets/a46fc742-0e24-483c-9876-895ddc3b8151" />
+<br>
+</br>
+
+</details>
+
+<details>
 <summary><b>Sprint Board Update</b></summary>
 <br>
 
