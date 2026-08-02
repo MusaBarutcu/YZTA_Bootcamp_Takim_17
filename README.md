@@ -158,3 +158,33 @@ Sprint 2'de uygulamanın üç ana sayfası tamamlandı ve çalışır hale getir
 </details>
 
 </details>
+
+
+# Sprint 3
+
+<details>
+<summary><b>Sprint Review</b></summary>
+<br>
+
+* **Alınan Kararlar:**
+  * Sprint 3'ün temel hedefleri olan kullanıcı kimlik doğrulama, gelişmiş analitik modüller ve canlıya alma süreçleri başarıyla tamamlandı.
+  * Kullanıcı kimlik doğrulama sistemi backend ve frontend tarafında entegre edilerek kullanıcıların uygulamaya güvenli bir şekilde giriş yapabilmesi sağlandı.
+  * Insight Agent; haftalık CO₂ trend analizi, kategori bazlı emisyon kırılımı, Türkiye ortalaması ile karşılaştırmalı analizler ve LLM tabanlı otomatik özet metin üretimi yetenekleriyle tamamen işlevsel hale getirildi.
+  * Uygulama canlı ortama deploy edilerek erişime açıldı.
+* **Sprint Review Katılımcıları:** 
+  * Melis Can, Eda Kaygulu, Rüya Sena Demirci, Furkan Emre İnce, Musa Barutcu.
+</details>
+
+<details>
+<summary><b>Sprint Retrospective</b></summary>
+<br>
+
+* **Kazanımlar & Olumlu Yönler:**
+  * Sprint 3'te hedeflediğimiz tüm teknik ve dokümantasyon süreçlerini zamanında tamamlayarak çalışan ürünü canlıya alabildik. Sprint 2'de yaşanan entegrasyon aksaklıklarından ders çıkarıldığı için bu sprintte frontend ve backend iletişimi çok daha akıcı ve hızlı yürütüldü.
+  * Insight Agent'ın Türkiye ortalaması kıyaslaması ve LLM özet üretimi gibi detaylarının artırılması, ürünün sunduğu analitik değeri bir üst seviyeye taşıdı.
+* **Geliştirilmesi Gereken Alanlar & Aksiyonlar:**
+  * LLM prompt çıktılarının ve trend analizi algoritmalarının veri çeşitliliği arttıkça doğru bir biçimde çalışmaya devam etmesi için canlı ortamdaki kullanıcı verileriyle düzenli testler yapılması gerekiyor.
+  * Canlıya alınan uygulamanın kullanıcı geri bildirimleri doğrultusunda performans takibinin yapılması ve olası hata izleme mekanizmalarının kurulması, sonraki süreç için temel aksiyon olarak belirlendi.
+</details>
+
+
